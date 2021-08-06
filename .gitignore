@@ -1,0 +1,8 @@
+__pycache__/
+build/
+dist/
+venv/
+secret/
+.egg-info/
+.idea
+db.sqlite3
