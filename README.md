@@ -1,7 +1,12 @@
 # Cambridge Masks Stats
-Program to output the wearing time and other statistics of a Cambridge 
-N99 | FFP2 mask .the project is currently in the alpha phase. here only the 
-execution in the terminal is dealt with.
+**Program to output the wearing time and other statistics of a Cambridge 
+N99 | FFP2 mask.**
+
+the program is in the alpha phase. this means that the api 
+will probably change often. when running it in the terminal, care is taken to 
+maintain the syntax if possible. this description also only deals with the terminal. the api will be described 
+in the documentation of the code, if this is necessary. it is tried to write 
+the code in a way that it is easy to understand.
 
 ## requirements
 ### python version
@@ -41,7 +46,7 @@ mask-stats <FILEPATH>
 masks-stats /home/w01fdev/Documents/masks.csv
 ```
 
-output:
+output
 ```shell
 [TOTAL WORN TIME]
 ID MASK                      HOURS
