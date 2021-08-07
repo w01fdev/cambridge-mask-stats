@@ -36,7 +36,7 @@ class Base:
         self._calc_minutes_worn_ratio()
 
     def get_df(self):
-        """returns a <pandas.DataFrame>.
+        """Returns a <pandas.DataFrame>.
 
         :return: <pandas.DataFrame>
         """
@@ -50,7 +50,7 @@ class Base:
         total_worn_time.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
-        """increases the minutes based on the aqi level.
+        """Increases the minutes based on the aqi level.
 
         the ratio was determined using the data from the instructions for use
         and refers to the pro version of the mask with a lifetime of 340 hours

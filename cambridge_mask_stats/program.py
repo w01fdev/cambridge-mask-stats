@@ -25,11 +25,11 @@ fck capitalism, fck patriarchy, fck racism, fck animal oppression ...
 
 
 # constants
-DATE = '2021-08-06'
+DATE = '2021-08-07'
 DESCRIPTION = '''Program to output the wearing time and other statistics of a Cambridge N99 | FFP2 mask.'''
 EMAIL = 'w01f@w01f.dev'
 HACKERS = ['w01f', ]
 LICENSE = 'GPL-3.0'
 NAME = 'Cambridge-Mask-Stats'
 URL = 'https://github.com/w01fdev/cambridge-mask-stats'
-VERSION = '0.0.2'
+VERSION = '0.0.3'
