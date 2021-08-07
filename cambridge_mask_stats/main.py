@@ -29,6 +29,11 @@ import argparse
 import pandas as pd
 
 
+# constants
+AQI_LEVEL = (1, 2, 3, 4, 5)
+AQI_HOURS = (340, 340, 220, 180, 90)
+
+
 class Base:
     def __init__(self, file: str):
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
@@ -58,13 +63,10 @@ class Base:
         at aqi level 2.
         """
 
-        aqi_level = (1, 2, 3, 4, 5)
-        aqi_hours = (340, 340, 220, 180, 90)
-
         for index, row in self._df.iterrows():
-            for level, hours in zip(aqi_level, aqi_hours):
+            for level, hours in zip(AQI_LEVEL, AQI_HOURS):
                 if row.aqi_level == level:
-                    self._df.at[index, 'minutes_worn'] = row.minutes_worn * (aqi_hours[1] / hours)
+                    self._df.at[index, 'minutes_worn'] = row.minutes_worn * (AQI_HOURS[1] / hours)
 
     @staticmethod
     def _output_title(title: str):
