@@ -72,7 +72,7 @@ class Stats:
 
         self._title = None
         self._header = None
-        self._str = '{:2} {:25} {:>3}'
+        self._str = '{:2} {:25} {:>5}'
 
     def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
         """Returns a series with date index and the column passed by parameter.
