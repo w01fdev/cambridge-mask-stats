@@ -50,6 +50,6 @@ output
 ```shell
 [TOTAL WORN TIME]
 ID MASK                      HOURS
- 1 The Admiral Pro           3
- 2 The Churchill Pro         142
+ 1 The Admiral Pro              73
+ 2 The Churchill Pro           233
 ```
