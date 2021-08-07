@@ -34,6 +34,8 @@ class Base:
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
 
+        self._total_worn_time = StatsTotalWornTime(self._df)
+
     def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
 
@@ -45,8 +47,7 @@ class Base:
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        total_worn_time = StatsTotalWornTime(self._df)
-        total_worn_time.run_terminal()
+        self._total_worn_time.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
