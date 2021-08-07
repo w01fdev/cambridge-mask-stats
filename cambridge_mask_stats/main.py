@@ -42,21 +42,6 @@ class Base:
 
         return self._df
 
-    def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
-        """Returns a series with date index and the column passed by parameter.
-
-        :param column: <str>
-        :param kwargs: <dict>
-            Parameters for <pandas.DataFrame.reindex>. More information at:
-            https://pandas.pydata.org/docs/reference/index.html
-        :return: <pandas.Series>
-        """
-
-        date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
-        series = self._df[column].reindex(date_range, **kwargs)
-
-        return series
-
     def run_terminal(self):
         """Executes the output for the terminal."""
 
@@ -87,6 +72,21 @@ class Stats:
         self._title = None
         self._header = None
         self._str = '{:2} {:25} {:>3}'
+
+    def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
+        """Returns a series with date index and the column passed by parameter.
+
+        :param column: <str>
+        :param kwargs: <dict>
+            Parameters for <pandas.DataFrame.reindex>. More information at:
+            https://pandas.pydata.org/docs/reference/index.html
+        :return: <pandas.Series>
+        """
+
+        date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
+        series = self._df[column].reindex(date_range, **kwargs)
+
+        return series
 
     def _terminal_header(self):
         """Heading and column names for the terminal [abstract]."""
