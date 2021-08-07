@@ -34,7 +34,7 @@ class Base:
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
 
-        self._total_worn_time = StatsTotalWornTime(self._df)
+        self._wear_time = StatsWearTime(self._df)
 
     def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
@@ -47,7 +47,8 @@ class Base:
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        self._total_worn_time.run_terminal()
+        self._output_title(self._wear_time.get_title())
+        self._wear_time.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
@@ -65,12 +66,22 @@ class Base:
                 if row.aqi_level == level:
                     self._df.at[index, 'minutes_worn'] = row.minutes_worn * (aqi_hours[1] / hours)
 
+    @staticmethod
+    def _output_title(title: str):
+        """Prints the title in a specific format.
+
+        :param title: <str>
+        """
+
+        print('\n{:*^34}'.format(title))
+
 
 class Stats:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
-        self._title = None
+        self._title = ''
+        self._subtitle = ''
         self._header = None
         self._str = '{:2} {:25} {:>5}'
 
@@ -89,25 +100,47 @@ class Stats:
 
         return series
 
-    def _terminal_header(self):
-        """Heading and column names for the terminal [abstract]."""
+    def get_title(self):
+        """Returns the title.
 
-        print(self._title)
+        :return: <str>
+        """
+
+        return self._title
+
+    def get_subtitle(self):
+        """Returns the subtitle.
+
+        :return: <str>
+        """
+
+        return self._subtitle
+
+    def _terminal_subtitle(self):
+        """Print subtitle and column names for the terminal [abstract]."""
+
+        print('\n{}'.format(self._subtitle))
         print(self._str.format(*self._header[0], self._header[1]))
 
 
-class StatsTotalWornTime(Stats):
+class StatsWear(Stats):
+    def __init__(self, df: pd.DataFrame):
+        super().__init__(df)
+        self._title = '[WEAR]'
+
+
+class StatsWearTime(StatsWear):
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
 
-        self._title = '\n[TOTAL WORN TIME]'
+        self._subtitle = '[HOURS WORN]'
         self._header = (('ID', 'MASK'), 'HOURS')
         self._data = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
 
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        self._terminal_header()
+        self._terminal_subtitle()
 
         for index, value in self._data.iteritems():
             print(self._str.format(*index, value))
