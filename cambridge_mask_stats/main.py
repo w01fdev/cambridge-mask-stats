@@ -43,13 +43,13 @@ class Base:
         return self._df
 
     def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
-        """
+        """Returns a series with date index and the column passed by parameter.
 
         :param column: <str>
         :param kwargs: <dict>
-            Parameters for <Pandas.DataFrame.reindex>. More information at:
+            Parameters for <pandas.DataFrame.reindex>. More information at:
             https://pandas.pydata.org/docs/reference/index.html
-        :return:
+        :return: <pandas.Series>
         """
 
         date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
