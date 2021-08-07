@@ -25,7 +25,6 @@ fck capitalism, fck patriarchy, fck racism, fck animal oppression...
 ########################################################################
 """
 
-
 import argparse
 import pandas as pd
 
@@ -35,7 +34,7 @@ class Base:
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
 
-    def get_df(self):
+    def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
 
         :return: <pandas.DataFrame>
