@@ -161,7 +161,10 @@ class StatsWornHours(StatsWorn):
     def get_data(self):
         """Return the data [abstract]."""
 
-        return self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
+        data:pd.Series = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
+        data.name = 'hours_worn'
+
+        return data
 
 
 class StatsWornPercent(StatsWorn):
