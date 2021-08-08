@@ -28,8 +28,6 @@ fck capitalism, fck patriarchy, fck racism, fck animal oppression...
 import argparse
 import pandas as pd
 
-from typing import Any
-
 
 # constants
 AQI_LEVEL = (1, 2, 3, 4, 5)
@@ -40,9 +38,6 @@ class Base:
     def __init__(self, file: str):
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
-
-        self._worn_hours = StatsWornHours(self._df)
-        self._worn_percent = StatsWornPercent(self._df)
 
     def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
@@ -55,9 +50,8 @@ class Base:
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        self._output_title(self._worn_hours.get_title())
-        self._worn_hours.run_terminal()
-        self._worn_percent.run_terminal()
+        stats_masks = StatsMasks(self._df)
+        stats_masks.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
@@ -72,27 +66,26 @@ class Base:
                 if value.aqi_level == level:
                     self._df.at[index, 'minutes_worn'] = value.minutes_worn * (AQI_HOURS[1] / hours)
 
-    @staticmethod
-    def _output_title(title: str):
-        """Prints the title in a specific format.
-
-        :param title: <str>
-        """
-
-        print('\n{:*^50}'.format(title))
-
 
 class Stats:
     def __init__(self, df: pd.DataFrame):
         self._df = df
-
         self._title = ''
-        self._subtitle = ''
-        self._header = None
-        self._str = '{:2} {:25} {:}'
 
-    def get_data(self) -> Any:
-        """Return the data [abstract]."""
+    def get_df(self) -> pd.DataFrame:
+        """Get a DataFrame with all series available in the class [abstract]."""
+
+    def run_terminal(self):
+        """"""
+
+        print('\n{:*^50}\n\n{}'.format(self._title, self.get_df()))
+
+
+class StatsDate(Stats):
+    """Statistics with a date range and all masks together."""
+
+    def __init__(self, df: pd.DataFrame):
+        super().__init__(df)
 
     def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
         """Returns a series with date index and the column passed by parameter.
@@ -109,82 +102,40 @@ class Stats:
 
         return series
 
-    def get_title(self):
-        """Returns the title.
 
-        :return: <str>
-        """
+class StatsMasks(Stats):
+    """Statistics which are separated for each mask."""
 
-        return self._title
-
-    def get_subtitle(self):
-        """Returns the subtitle.
-
-        :return: <str>
-        """
-
-        return self._subtitle
-
-    def run_terminal(self):
-        """Executes the base output for the terminal."""
-
-        data = self.get_data()
-        self._terminal_subtitle()
-        self._run_terminal(data)
-
-    def _run_terminal(self, data):
-        """Executes the output for the terminal [abstract]."""
-
-        for index, value in data.iteritems():
-            print(self._str.format(*index, value))
-
-    def _terminal_subtitle(self):
-        """Print subtitle and column names for the terminal [abstract]."""
-
-        print('\n{}'.format(self._subtitle))
-        print(self._str.format(*self._header[0], self._header[1]))
-
-
-class StatsWorn(Stats):
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
-        self._title = '[WORN]'
+        self._title = ' StatsMasks '
 
+    def get_df(self) -> pd.DataFrame:
+        """Get a DataFrame with all series available in the class [abstract]."""
 
-class StatsWornHours(StatsWorn):
-    def __init__(self, df: pd.DataFrame):
-        super().__init__(df)
+        df = pd.concat([self.get_worn_hours(), self.get_worn_percentage()], axis=1)
+        df.rename_axis('worn | wear', axis=1, inplace=True)
 
-        self._subtitle = '[HOURS WORN]'
-        self._header = (('ID', 'MASK'), 'HOURS')
+        return df
 
-    def get_data(self):
-        """Return the data [abstract]."""
+    def get_worn_hours(self) -> pd.Series:
+        """Returns the time worn in hours for each mask."""
 
-        data: pd.Series = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
-        data.name = 'hours_worn'
+        series: pd.Series = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
+        series.name = 'hrs'
 
-        return data
+        return series
 
+    def get_worn_percentage(self) -> pd.Series:
+        """Returns the wear percentage for each mask."""
 
-class StatsWornPercent(StatsWorn):
-    def __init__(self, df: pd.DataFrame):
-        super().__init__(df)
+        series: pd.Series = self.get_worn_hours()
+        series.name = 'pct'
 
-        self._subtitle = '[WORN PERCENT]'
-        self._header = (('ID', 'MASK'), 'PERCENT')
+        for index, value in series.iteritems():
+            series.at[index] = round(((value / AQI_HOURS[1]) * 100), 2)
 
-    def get_data(self):
-        """Return the data [abstract]."""
-
-        swh = StatsWornHours(self._df)
-        data: pd.Series = swh.get_data()
-        data.name = 'worn_percent'
-
-        for index, value in data.iteritems():
-            data.at[index] = round(((value / AQI_HOURS[1]) * 100), 2)
-
-        return data
+        return series
 
 
 def main():

@@ -48,15 +48,10 @@ masks-stats /home/w01fdev/Documents/masks.csv
 
 output
 ```text
-**********************[WORN]**********************
+******************* StatsMasks *******************
 
-[HOURS WORN]
-ID MASK                      HOURS
- 1 The Admiral Pro           73
- 2 The Churchill Pro         233
-
-[WORN PERCENT]
-ID MASK                      PERCENT
- 1 The Admiral Pro           21.47
- 2 The Churchill Pro         68.53
+worn | wear           hrs    pct
+id model                        
+1  The Admiral Pro     73  21.47
+2  The Churchill Pro  233  68.53
 ```
