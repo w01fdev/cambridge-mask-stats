@@ -78,7 +78,7 @@ class Stats:
     def run_terminal(self):
         """"""
 
-        print('\n{:*^50}\n\n{}'.format(self._title, self.get_df()))
+        print('\n{:*^50}\n\n{}\n\n{:*^50}\n'.format(self._title, self.get_df(), ''))
 
 
 class StatsDate(Stats):

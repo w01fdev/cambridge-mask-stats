@@ -32,4 +32,4 @@ HACKERS = ['w01f', ]
 LICENSE = 'GPL-3.0'
 NAME = 'cambridge-mask-stats'
 URL = 'https://github.com/w01fdev/cambridge-mask-stats'
-VERSION = '0.5.0'
+VERSION = '0.5.1'
