@@ -28,6 +28,8 @@ fck capitalism, fck patriarchy, fck racism, fck animal oppression...
 import argparse
 import pandas as pd
 
+from typing import Any
+
 
 # constants
 AQI_LEVEL = (1, 2, 3, 4, 5)
@@ -40,6 +42,7 @@ class Base:
         self._calc_minutes_worn_ratio()
 
         self._worn_hours = StatsWornHours(self._df)
+        self._worn_percent = StatsWornPercent(self._df)
 
     def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
@@ -54,6 +57,7 @@ class Base:
 
         self._output_title(self._worn_hours.get_title())
         self._worn_hours.run_terminal()
+        self._worn_percent.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
@@ -63,10 +67,10 @@ class Base:
         at aqi level 2.
         """
 
-        for index, row in self._df.iterrows():
+        for index, value in self._df.iterrows():
             for level, hours in zip(AQI_LEVEL, AQI_HOURS):
-                if row.aqi_level == level:
-                    self._df.at[index, 'minutes_worn'] = row.minutes_worn * (AQI_HOURS[1] / hours)
+                if value.aqi_level == level:
+                    self._df.at[index, 'minutes_worn'] = value.minutes_worn * (AQI_HOURS[1] / hours)
 
     @staticmethod
     def _output_title(title: str):
@@ -75,7 +79,7 @@ class Base:
         :param title: <str>
         """
 
-        print('\n{:*^34}'.format(title))
+        print('\n{:*^50}'.format(title))
 
 
 class Stats:
@@ -85,7 +89,10 @@ class Stats:
         self._title = ''
         self._subtitle = ''
         self._header = None
-        self._str = '{:2} {:25} {:>5}'
+        self._str = '{:2} {:25} {:}'
+
+    def get_data(self) -> Any:
+        """Return the data [abstract]."""
 
     def get_date_range_series(self, column: str, **kwargs) -> pd.Series:
         """Returns a series with date index and the column passed by parameter.
@@ -118,6 +125,19 @@ class Stats:
 
         return self._subtitle
 
+    def run_terminal(self):
+        """Executes the base output for the terminal."""
+
+        data = self.get_data()
+        self._terminal_subtitle()
+        self._run_terminal(data)
+
+    def _run_terminal(self, data):
+        """Executes the output for the terminal [abstract]."""
+
+        for index, value in data.iteritems():
+            print(self._str.format(*index, value))
+
     def _terminal_subtitle(self):
         """Print subtitle and column names for the terminal [abstract]."""
 
@@ -128,7 +148,7 @@ class Stats:
 class StatsWorn(Stats):
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
-        self._title = '[WEAR]'
+        self._title = '[WORN]'
 
 
 class StatsWornHours(StatsWorn):
@@ -137,15 +157,31 @@ class StatsWornHours(StatsWorn):
 
         self._subtitle = '[HOURS WORN]'
         self._header = (('ID', 'MASK'), 'HOURS')
-        self._data = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
 
-    def run_terminal(self):
-        """Executes the output for the terminal."""
+    def get_data(self):
+        """Return the data [abstract]."""
 
-        self._terminal_subtitle()
+        return self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).sum() // 60
 
-        for index, value in self._data.iteritems():
-            print(self._str.format(*index, value))
+
+class StatsWornPercent(StatsWorn):
+    def __init__(self, df: pd.DataFrame):
+        super().__init__(df)
+
+        self._subtitle = '[WORN PERCENT]'
+        self._header = (('ID', 'MASK'), 'PERCENT')
+
+    def get_data(self):
+        """Return the data [abstract]."""
+
+        swh = StatsWornHours(self._df)
+        data: pd.Series = swh.get_data()
+        data.name = 'worn_percent'
+
+        for index, value in data.iteritems():
+            data.at[index] = round(((value / AQI_HOURS[1]) * 100), 2)
+
+        return data
 
 
 def main():
