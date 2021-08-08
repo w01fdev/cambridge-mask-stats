@@ -10,7 +10,7 @@ the code in a way that it is easy to understand.
 
 ## requirements
 ### python version
-`Python >= 3.5`
+`Python >= 3.6`
 
 ### dependencies
 ```text
