@@ -39,7 +39,7 @@ class Base:
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
 
-        self._wear_time = StatsWearTime(self._df)
+        self._worn_hours = StatsWornHours(self._df)
 
     def get_df(self) -> pd.DataFrame:
         """Returns a <pandas.DataFrame>.
@@ -52,8 +52,8 @@ class Base:
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        self._output_title(self._wear_time.get_title())
-        self._wear_time.run_terminal()
+        self._output_title(self._worn_hours.get_title())
+        self._worn_hours.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
@@ -125,13 +125,13 @@ class Stats:
         print(self._str.format(*self._header[0], self._header[1]))
 
 
-class StatsWear(Stats):
+class StatsWorn(Stats):
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
         self._title = '[WEAR]'
 
 
-class StatsWearTime(StatsWear):
+class StatsWornHours(StatsWorn):
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
 
