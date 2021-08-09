@@ -41,12 +41,16 @@ pip install cambridge-mask-stats
 mask-stats <FILEPATH>
 ```
 
+## abbreviations in the output
+* hrs -> hours
+* pct -> percent | percentage
+
 #### example
 ```shell
 masks-stats /home/w01fdev/Documents/masks.csv
 ```
 
-output
+#### output
 ```text
 ******************* StatsMasks *******************
 
