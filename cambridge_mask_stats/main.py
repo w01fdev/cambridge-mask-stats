@@ -117,11 +117,25 @@ class StatsDateRange(StatsDate):
     def get_df(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
-        df = pd.concat([self.get_mean_min_daily(), self.get_sum_min_month(), self.get_sum_hrs(),
+        df = pd.concat([self.get_count_days(), self.get_mean_min_daily(), self.get_sum_min_month(), self.get_sum_hrs(),
                         self.get_pct()], axis=1)
         df.rename_axis('worn | wear', axis=1, inplace=True)
 
         return df
+
+    def get_series(self) -> pd.Series:
+        """Return the pd.Series which is instantiated in <__init__>."""
+
+        return self._ser
+
+    def get_count_days(self) -> pd.Series:
+        """Returns a day counter for each month."""
+
+        series: pd.Series = self._ser.resample('M').count()
+        series = series.astype(int)
+        series.name = 'count_d'
+
+        return series
 
     def get_mean_min_daily(self) -> pd.Series:
         """Returns the daily mean value in minutes for each month."""

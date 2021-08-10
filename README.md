@@ -42,11 +42,12 @@ mask-stats <FILEPATH>
 ```
 
 ## abbreviations in the output
+* count_d -> days in the month for which data are available
 * hrs -> hours
+* mean_min_d -> mean minutes daily  
 * pct -> percent | percentage
-* mean_min_d -> mean minutes daily
+* sum_hrs -> summary hours 
 * sum_min -> summary minutes
-* sum_hrs -> summary hours
 
 #### example
 ```shell
@@ -62,18 +63,13 @@ id model
 2  The Churchill Pro  235  69.12
 
 ***************** StatsDateRange *****************
-worn | wear  mean_min_d  sum_min  sum_hrs    pct
-2020-08-31           58       58        0   0.28
-2020-09-30            9      278        4   1.36
-2020-10-31           39     1237       20   6.06
-2020-11-30          107     3235       53  15.86
-2020-12-31           62     1940       32   9.51
-2021-01-31           49     1520       25   7.45
-2021-02-28           52     1478       24   7.25
-2021-03-31           52     1618       26   7.93
-2021-04-30           58     1749       29   8.57
-2021-05-31           56     1750       29   8.58
-2021-06-30           57     1715       28   8.41
-2021-07-31           46     1446       24   7.09
-2021-08-31           54      492        8   2.41
+worn | wear  count_d  mean_min_d  sum_min  sum_hrs    pct
+2020-08-31         1          58       58        0   0.28
+2020-09-30        30           9      278        4   1.36
+2020-10-31        31          39     1237       20   6.06
+2020-11-30        30         107     3235       53  15.86
+2020-12-31        31          62     1940       32   9.51
+2021-01-31        31          49     1520       25   7.45
+2021-02-28        28          52     1478       24   7.25
+2021-03-31        31          52     1618       26   7.93
 ```
