@@ -52,6 +52,8 @@ class Base:
 
         stats_masks = StatsMasks(self._df)
         stats_masks.run_terminal()
+        stats_date_range = StatsDateRange(self._df)
+        stats_date_range.run_terminal()
 
     def _calc_minutes_worn_ratio(self):
         """Increases the minutes based on the aqi level.
@@ -78,7 +80,7 @@ class Stats:
     def run_terminal(self):
         """"""
 
-        print('\n{:*^50}\n\n{}\n\n{:*^50}\n'.format(self._title, self.get_df(), ''))
+        print('\n{:*^50}\n{:}'.format(self._title, self.get_df()))
 
 
 class StatsDate(Stats):
@@ -99,6 +101,59 @@ class StatsDate(Stats):
 
         date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
         series = self._df[column].reindex(date_range, **kwargs)
+
+        return series
+
+
+class StatsDateRange(StatsDate):
+    """Subclass for time series that output a range of dates."""
+
+    def __init__(self, df: pd.DataFrame):
+        super().__init__(df)
+        self._title = ' StatsDate '
+
+        self._ser: pd.Series = self.get_date_range_series('minutes_worn', fill_value=0)
+
+    def get_df(self) -> pd.DataFrame:
+        """Get a DataFrame with all series available in the class [abstract]."""
+
+        df = pd.concat([self.get_mean_min_daily(), self.get_sum_min_month(), self.get_sum_hrs(),
+                        self.get_pct()], axis=1)
+        df.rename_axis('worn | wear', axis=1, inplace=True)
+
+        return df
+
+    def get_mean_min_daily(self) -> pd.Series:
+        """Returns the daily mean value in minutes for each month."""
+
+        series: pd.Series = self._ser.resample('M').mean()
+        series = series.astype(int)
+        series.name = 'mean_min_d'
+
+        return series
+
+    def get_sum_min_month(self) -> pd.Series:
+        """Returns the summed value in minutes for each month."""
+
+        series: pd.Series = self._ser.resample('M').sum()
+        series.name = 'sum_min'
+
+        return series
+
+    def get_sum_hrs(self) -> pd.Series:
+        """Returns the summed value in hours for each month."""
+
+        series: pd.Series = (self._ser.resample('M').sum() // 60)
+        series.name = 'sum_hrs'
+
+        return series
+
+    def get_pct(self) -> pd.Series:
+        """Returns the value of wear in percentage for each month."""
+
+        series: pd.Series = (self._ser.resample('M').sum() / (AQI_HOURS[1] * 60) * 100)
+        series = series.round(2)
+        series.name = 'pct'
 
         return series
 

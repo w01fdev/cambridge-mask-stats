@@ -44,6 +44,9 @@ mask-stats <FILEPATH>
 ## abbreviations in the output
 * hrs -> hours
 * pct -> percent | percentage
+* mean_min_d -> mean minutes daily
+* sum_min -> summary minutes
+* sum_hrs -> summary hours
 
 #### example
 ```shell
@@ -53,11 +56,24 @@ masks-stats /home/w01fdev/Documents/masks.csv
 #### output
 ```text
 ******************* StatsMasks *******************
-
 worn | wear           hrs    pct
 id model                        
 1  The Admiral Pro     73  21.47
-2  The Churchill Pro  233  68.53
+2  The Churchill Pro  235  69.12
 
-**************************************************
+******************* StatsDate ********************
+worn | wear  mean_min_d  sum_min  sum_hrs    pct
+2020-08-31           58       58        0   0.28
+2020-09-30            9      278        4   1.36
+2020-10-31           39     1237       20   6.06
+2020-11-30          107     3235       53  15.86
+2020-12-31           62     1940       32   9.51
+2021-01-31           49     1520       25   7.45
+2021-02-28           52     1478       24   7.25
+2021-03-31           52     1618       26   7.93
+2021-04-30           58     1749       29   8.57
+2021-05-31           56     1750       29   8.58
+2021-06-30           57     1715       28   8.41
+2021-07-31           46     1446       24   7.09
+2021-08-31           54      492        8   2.41
 ```
