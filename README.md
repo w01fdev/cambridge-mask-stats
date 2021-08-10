@@ -61,7 +61,7 @@ id model
 1  The Admiral Pro     73  21.47
 2  The Churchill Pro  235  69.12
 
-******************* StatsDate ********************
+***************** StatsDateRange *****************
 worn | wear  mean_min_d  sum_min  sum_hrs    pct
 2020-08-31           58       58        0   0.28
 2020-09-30            9      278        4   1.36

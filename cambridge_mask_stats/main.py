@@ -110,7 +110,7 @@ class StatsDateRange(StatsDate):
 
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
-        self._title = ' StatsDate '
+        self._title = ' StatsDateRange '
 
         self._ser: pd.Series = self.get_date_range_series('minutes_worn', fill_value=0)
 
