@@ -1,12 +1,18 @@
 # Cambridge Masks Stats
-**Program to output the wearing time and other statistics of a Cambridge 
+**Application to output the wearing time and other statistics of a Cambridge 
 N99 | FFP2 mask.**
 
 the program is in the alpha phase. this means that the api 
-will probably change often. when running it in the terminal, care is taken to 
-maintain the syntax if possible. this description also only deals with the terminal. the api will be described 
+will probably change often. the code is written in such a way that the syntax 
+in the console is maintained or at least only minimal changes are made. this 
+description also only deals with the terminal. the api will be described 
 in the documentation of the code, if this is necessary. it is tried to write 
 the code in a way that it is easy to understand.
+
+the application is intended exclusively for the pro version of the cambridge 
+mask, which should be worn for a maximum of 340 hours. the minutes are 
+calculated automatically for aqi_level higher than 2, so that the wear is 
+displayed correctly.
 
 ## requirements
 ### python version
