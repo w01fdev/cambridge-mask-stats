@@ -40,10 +40,7 @@ class Base:
         self._calc_minutes_worn_ratio()
 
     def get_df(self) -> pd.DataFrame:
-        """Returns a <pandas.DataFrame>.
-
-        :return: <pandas.DataFrame>
-        """
+        """Returns a <pandas.DataFrame>."""
 
         return self._df
 
@@ -80,7 +77,7 @@ class Stats:
         """Get a DataFrame with all series available in the class [abstract]."""
 
     def run_terminal(self):
-        """"""
+        """Prints the title of the respective statistic."""
 
         print('\n{:*^50}\n{:}'.format(self._title, self.get_df()))
 
@@ -187,10 +184,7 @@ class StatsMasks(Stats):
         return df
 
     def get_worn_hours(self, ratio: bool = False) -> pd.Series:
-        """Returns the time worn in hours for each mask.
-
-        :param ratio: <bool> std -> <False>
-        """
+        """Returns the time worn in hours for each mask."""
 
         if ratio:
             column = 'minutes_worn_ratio'
