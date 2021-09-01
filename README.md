@@ -14,6 +14,11 @@ mask, which should be worn for a maximum of 340 hours. the minutes are
 calculated automatically for aqi_level higher than 2, so that the wear is 
 displayed correctly.
 
+if there is no entry in the csv for a day between the start and end date, the 
+time carried is automatically set to 0 for that day. this means that for months 
+that lie between the start and end month <count_d> also counts the days for 
+which the mask was not worn or for which there is no entry in the csv file.
+
 ## requirements
 ### python version
 `Python >= 3.6`
@@ -49,11 +54,12 @@ mask-stats <FILEPATH>
 
 ## abbreviations in the output
 * count_d -> days in the month for which data are available
-* hrs -> hours
+* hrs -> hours (really worn)
 * mean_min_d -> mean minutes daily  
-* pct -> percent | percentage
+* pct -> percent | percentage (determined from sum_min_ratio)
 * sum_hrs -> summary hours 
 * sum_min -> summary minutes
+* *_ratio -> values under consideration of the ratio (aqi_level > 2)
 
 #### example
 ```shell
@@ -63,19 +69,14 @@ masks-stats /home/w01fdev/Documents/masks.csv
 #### output
 ```text
 ******************* StatsMasks *******************
-worn | wear           hrs    pct
-id model                        
-1  The Admiral Pro     73  21.47
-2  The Churchill Pro  235  69.12
+worn | wear           hrs  hrs_ratio   pct
+id model                                  
+1  The Admiral Pro     10         12  3.53
+2  The Churchill Pro   15         27  7.94
 
 ***************** StatsDateRange *****************
-worn | wear  count_d  mean_min_d  sum_min  sum_hrs    pct
-2020-08-31         1          58       58        0   0.28
-2020-09-30        30           9      278        4   1.36
-2020-10-31        31          39     1237       20   6.06
-2020-11-30        30         107     3235       53  15.86
-2020-12-31        31          62     1940       32   9.51
-2021-01-31        31          49     1520       25   7.45
-2021-02-28        28          52     1478       24   7.25
-2021-03-31        31          52     1618       26   7.93
+worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_hrs  sum_hrs_ratio   pct
+2020-08-31         1          58                58       58             58        0              0  0.28
+2020-09-30        30           9                18      278            563        4              9  2.76
+2020-10-31        31          39                56     1237           1759       20             29  8.62
 ```
