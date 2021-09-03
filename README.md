@@ -1,4 +1,4 @@
-# Cambridge Masks Stats
+# Cambridge Mask Stats
 **Application to output the wearing time and other statistics of a Cambridge 
 N99 | FFP2 mask.**
 
