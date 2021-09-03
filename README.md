@@ -80,3 +80,8 @@ worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_
 2020-09-30        30           9                18      278            563        4              9  2.76
 2020-10-31        31          39                56     1237           1759       20             29  8.62
 ```
+
+
+## list of possible extensions
+- end of life prediction for each mask
+- output of plots
