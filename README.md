@@ -71,7 +71,7 @@ mask-stats <FILEPATH>
 * *_ratio -> values under consideration of the ratio (aqi_level > 2)
 
 #### usage
-```shell
+```text
 usage: cambridge_mask_stats.py [-h] [--days DAYS] file
 
 positional arguments:
