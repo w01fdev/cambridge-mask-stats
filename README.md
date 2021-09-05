@@ -72,7 +72,7 @@ mask-stats <FILEPATH>
 
 #### usage
 ```text
-usage: cambridge_mask_stats.py [-h] [--days DAYS] file
+usage: masks-stats [-h] [--days DAYS] file
 
 positional arguments:
   file
