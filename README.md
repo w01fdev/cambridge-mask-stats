@@ -16,8 +16,15 @@ displayed correctly.
 
 if there is no entry in the csv for a day between the start and end date, the 
 time carried is automatically set to 0 for that day. this means that for months 
-that lie between the start and end month <count_d> also counts the days for 
+that lie between the start and end month *count_d* also counts the days for 
 which the mask was not worn or for which there is no entry in the csv file.
+
+when predicting the end of life of a mask, the average value in minutes for the 
+number of days (standard: 30) passed in the argument *days* for the calculation. 
+if there is no value for one of these days, the value for this day is 
+calculated as 0. the mean value is calculated from all masks worn, not per mask.
+
+**only 1 mask per day can be recorded! Otherwise there is a *ValueError*.**
 
 ## requirements
 ### python version
@@ -54,6 +61,8 @@ mask-stats <FILEPATH>
 
 ## abbreviations in the output
 * count_d -> days in the month for which data are available
+* eol_d -> prediction in how many days the mask will probably reach its end of life
+* eol_date -> prediction on which date the mask will probably reach the end of life
 * hrs -> hours (really worn)
 * mean_min_d -> mean minutes daily  
 * pct -> percent | percentage (determined from sum_min_ratio)
@@ -61,7 +70,19 @@ mask-stats <FILEPATH>
 * sum_min -> summary minutes
 * *_ratio -> values under consideration of the ratio (aqi_level > 2)
 
-#### example
+#### usage
+```shell
+usage: cambridge_mask_stats.py [-h] [--days DAYS] file
+
+positional arguments:
+  file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --days DAYS, -d DAYS  days to be used in the end of life prediction. enter 0 for all [default: 30]
+```
+
+#### examples
 ```shell
 masks-stats /home/w01fdev/Documents/masks.csv
 ```
@@ -69,10 +90,10 @@ masks-stats /home/w01fdev/Documents/masks.csv
 #### output
 ```text
 ******************* StatsMasks *******************
-worn | wear           hrs  hrs_ratio   pct
-id model                                  
-1  The Admiral Pro     10         12  3.53
-2  The Churchill Pro   15         27  7.94
+worn | wear           hrs  hrs_ratio   pct  eol_d    eol_date
+id model                                                     
+1  The Admiral Pro     10         12  3.53    335  2022-08-06
+2  The Churchill Pro   15         27  7.94    319  2022-07-21
 
 ***************** StatsDateRange *****************
 worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_hrs  sum_hrs_ratio   pct
@@ -81,7 +102,7 @@ worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_
 2020-10-31        31          39                56     1237           1759       20             29  8.62
 ```
 
-
 ## list of possible extensions
-- end of life prediction for each mask
 - output of plots
+- days worn for each mask
+- percentage change in wearing time compared to last month

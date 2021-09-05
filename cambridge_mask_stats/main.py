@@ -26,16 +26,19 @@ fck capitalism, fck patriarchy, fck racism, fck animal oppression...
 """
 
 import argparse
+import datetime
 import pandas as pd
-
 
 # constants
 AQI_LEVEL = (1, 2, 3, 4, 5)
 AQI_HOURS = (340, 340, 220, 180, 90)
+MINUTES_MAX = AQI_HOURS[1] * 60
 
 
 class Base:
-    def __init__(self, file: str):
+    def __init__(self, file: str, days: int = 30):
+        self._days = days
+
         self._df = pd.read_csv(file, index_col=0, parse_dates=[0])
         self._calc_minutes_worn_ratio()
 
@@ -47,7 +50,7 @@ class Base:
     def run_terminal(self):
         """Executes the output for the terminal."""
 
-        stats_masks = StatsMasks(self._df)
+        stats_masks = StatsMasks(self._df, self._days)
         stats_masks.run_terminal()
         stats_date_range = StatsDateRange(self._df)
         stats_date_range.run_terminal()
@@ -73,6 +76,19 @@ class Stats:
         self._df = df
         self._title = ''
 
+    def get_date_range(self, columns: list[str], **kwargs) -> pd.DataFrame:
+        """Returns a DataFrame with date index and columns passed by parameter.
+
+        :param columns: <str>
+        :param kwargs: <dict>
+            Parameters for <pandas.DataFrame.reindex>. More information at:
+            https://pandas.pydata.org/docs/reference/index.html
+        """
+
+        date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
+
+        return self._df[columns].reindex(date_range, **kwargs)
+
     def get_df(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
@@ -87,19 +103,6 @@ class StatsDate(Stats):
 
     def __init__(self, df: pd.DataFrame):
         super().__init__(df)
-
-    def get_date_range(self, columns: list[str], **kwargs) -> pd.DataFrame:
-        """Returns a DataFrame with date index and columns passed by parameter.
-
-        :param columns: <str>
-        :param kwargs: <dict>
-            Parameters for <pandas.DataFrame.reindex>. More information at:
-            https://pandas.pydata.org/docs/reference/index.html
-        """
-
-        date_range = pd.date_range(self._df.iloc[0].name.date(), self._df.iloc[-1].name.date())
-
-        return self._df[columns].reindex(date_range, **kwargs)
 
 
 class StatsDateRange(StatsDate):
@@ -171,17 +174,42 @@ class StatsDateRange(StatsDate):
 class StatsMasks(Stats):
     """Statistics which are separated for each mask."""
 
-    def __init__(self, df: pd.DataFrame):
+    def __init__(self, df: pd.DataFrame, days: int = 30):
         super().__init__(df)
         self._title = ' StatsMasks '
+        self._eol_days = days
 
     def get_df(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
-        df = pd.concat([self.get_worn_hours(), self.get_worn_hours_ratio(), self.get_worn_percentage()], axis=1)
+        df = pd.concat([self.get_worn_hours(), self.get_worn_hours_ratio(), self.get_worn_percentage(),
+                        self.get_end_of_life()], axis=1)
         df.rename_axis('worn | wear', axis=1, inplace=True)
 
         return df
+
+    def get_end_of_life(self) -> pd.DataFrame:
+        """Prediction when the mask will probably reach the end of life."""
+
+        ser = self.get_date_range(['minutes_worn_ratio'], fill_value=0)
+
+        if self._eol_days == 0:
+            mean = ser.mean()
+        else:
+            mean = ser.iloc[-self._eol_days:].mean()
+
+        ser = self._df['minutes_worn_ratio'].groupby([self._df['id'], self._df['model']]).sum()
+        ser_days = ser.copy(deep=True)
+        ser_date = ser.copy(deep=True)
+        ser_days.name = 'eol_d'
+        ser_date.name = 'eol_date'
+
+        for ix, (index, value) in enumerate(ser.iteritems()):
+            eol = int(((AQI_HOURS[1] * 60) - value) // mean)
+            ser_days.iloc[ix] = eol
+            ser_date.iloc[ix] = datetime.date.today() + datetime.timedelta(days=eol)
+
+        return pd.concat([ser_days, ser_date], axis=1)
 
     def get_worn_hours(self, ratio: bool = False) -> pd.Series:
         """Returns the time worn in hours for each mask."""
@@ -220,9 +248,11 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('file', type=str)
+    parser.add_argument('--days', '-d', type=int, default=30,
+                        help='days to be used in the end of life prediction. enter 0 for all [default: 30]')
     args = parser.parse_args()
 
-    base = Base(args.file)
+    base = Base(args.file, args.days)
     base.run_terminal()
 
 
