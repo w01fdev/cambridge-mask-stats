@@ -91,10 +91,10 @@ masks-stats /home/w01fdev/Documents/masks.csv
 #### output
 ```text
 ******************* StatsMasks *******************
-worn | wear           hrs  hrs_ratio   pct  eol_d    eol_date
-id model                                                     
-1  The Admiral Pro     10         12  3.53    335  2022-08-06
-2  The Churchill Pro   15         27  7.94    319  2022-07-21
+worn | wear           hrs  hrs_ratio  worn_d   pct  eol_d    eol_date
+id model                                                             
+1  The Admiral Pro     10         12       7  3.53    335  2022-08-07
+2  The Churchill Pro   15         27      22  7.94    319  2022-07-22
 
 ***************** StatsDateRange *****************
 worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_hrs  sum_hrs_ratio   pct
