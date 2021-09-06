@@ -182,8 +182,8 @@ class StatsMasks(Stats):
     def get_df(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
-        df = pd.concat([self.get_worn_hours(), self.get_worn_hours_ratio(), self.get_worn_percentage(),
-                        self.get_end_of_life()], axis=1)
+        df = pd.concat([self.get_worn_hours(), self.get_worn_hours_ratio(), self.get_worn_days(),
+                        self.get_worn_percentage(), self.get_end_of_life()], axis=1)
         df.rename_axis('worn | wear', axis=1, inplace=True)
 
         return df
@@ -210,6 +210,14 @@ class StatsMasks(Stats):
             ser_date.iloc[ix] = datetime.date.today() + datetime.timedelta(days=eol)
 
         return pd.concat([ser_days, ser_date], axis=1)
+
+    def get_worn_days(self):
+        """Returns the days worn for each mask."""
+
+        ser = self._df['minutes_worn'].groupby([self._df['id'], self._df['model']]).count()
+        ser.name = 'worn_d'
+
+        return ser
 
     def get_worn_hours(self, ratio: bool = False) -> pd.Series:
         """Returns the time worn in hours for each mask."""

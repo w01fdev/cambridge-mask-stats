@@ -68,6 +68,7 @@ mask-stats <FILEPATH>
 * pct -> percent | percentage (determined from sum_min_ratio)
 * sum_hrs -> summary hours 
 * sum_min -> summary minutes
+* worn_d -> days worn
 * *_ratio -> values under consideration of the ratio (aqi_level > 2)
 
 #### usage
@@ -104,5 +105,4 @@ worn | wear  count_d  mean_min_d  mean_min_d_ratio  sum_min  sum_min_ratio  sum_
 
 ## list of possible extensions
 - output of plots
-- days worn for each mask
 - percentage change in wearing time compared to last month
