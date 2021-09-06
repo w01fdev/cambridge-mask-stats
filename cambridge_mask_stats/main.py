@@ -89,13 +89,13 @@ class Stats:
 
         return self._df[columns].reindex(date_range, **kwargs)
 
-    def get_df(self) -> pd.DataFrame:
+    def run(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
     def run_terminal(self):
         """Prints the title of the respective statistic."""
 
-        print('\n{:*^50}\n{:}'.format(self._title, self.get_df()))
+        print('\n{:*^50}\n{:}'.format(self._title, self.run()))
 
 
 class StatsDate(Stats):
@@ -116,7 +116,7 @@ class StatsDateRange(StatsDate):
 
         self._df: pd.DataFrame = self.get_date_range(['minutes_worn', 'minutes_worn_ratio'], fill_value=0)
 
-    def get_df(self) -> pd.DataFrame:
+    def run(self) -> pd.DataFrame:
         """Get a DataFrame with all series | df available in the class [abstract]."""
 
         df = pd.concat([self.get_count_days(), self.get_mean_min_daily(), self.get_sum_min_month(), self.get_sum_hrs(),
@@ -179,7 +179,7 @@ class StatsMasks(Stats):
         self._title = ' StatsMasks '
         self._eol_days = days
 
-    def get_df(self) -> pd.DataFrame:
+    def run(self) -> pd.DataFrame:
         """Get a DataFrame with all series available in the class [abstract]."""
 
         df = pd.concat([self.get_worn_hours(), self.get_worn_hours_ratio(), self.get_worn_days(),
