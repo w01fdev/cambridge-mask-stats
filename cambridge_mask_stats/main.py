@@ -98,14 +98,7 @@ class Stats:
         print('\n{:*^50}\n{:}'.format(self._title, self.run()))
 
 
-class StatsDate(Stats):
-    """Statistics with a date range and all masks together."""
-
-    def __init__(self, df: pd.DataFrame):
-        super().__init__(df)
-
-
-class StatsDateRange(StatsDate):
+class StatsDateRange(Stats):
     """Subclass for time series that output a range of dates."""
 
     def __init__(self, df: pd.DataFrame):
